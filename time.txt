@@ -1,0 +1,21 @@
+
+#include <time.h>
+#include <stdio.h>
+#include <sys/time.h>
+
+int main(void)
+{ time_t k = time(NULL);
+  printf("\n--------------------\n\n");
+  printf(" TIME::%lu\n", k);
+  printf("PARSE::%s\n", ctime(&k));
+  k -= 6;
+  printf("\n--------------------\n\n");
+  printf(" TIME::%lu\n", k);
+  printf("PARSE::%s\n", ctime(&k));
+  printf("\n--------------------\n\n");
+
+  struct timeval coucou;
+  gettimeofday(&coucou, NULL);
+  printf("COUCOU::(%lu, %lu) | %lu", coucou.tv_sec, coucou.tv_usec, coucou.tv_sec * 1000000 + coucou.tv_usec);
+  printf("\n--------------------\n\n");
+}
