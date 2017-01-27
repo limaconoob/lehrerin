@@ -1,0 +1,8 @@
+# Compiled files
+*.o
+
+# Swap
+*.rs#
+*.rs.swp
+*.swp
+*.swo

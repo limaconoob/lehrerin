@@ -18,4 +18,6 @@
     struct s_ubersetzen *next;
   } t_trad;
 
+  t_trad *extraction(void);
+
 #endif
