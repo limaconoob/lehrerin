@@ -23,6 +23,20 @@ void deltab(char **tab)
     m += 1; }
   free(tab); }
 
+t_trad *get_time(t_trad *tmp, char *tab, int index)
+{ int secds;
+  int cents;
+  if (LEN(tab) != 5)                                   //Temps mal formatté
+  { ((*tmp).chrono)[index] = 0;
+    return (tmp); }
+  secds = atoi(tab);
+  cents = atoi(tab + 3);
+  if (secds < 0 || secds > 99 || cents < 0 || cents > 99) //Temps mal formatté
+  { ((*tmp).chrono)[index] = 0;
+    return (tmp); }
+  ((*tmp).chrono)[index] = ((time_t)secds << 8) + (time_t)cents;
+  return (tmp); }
+
 t_trad *basic(t_trad **trad, char **tab)
 { t_trad *tmp;
   tmp = *trad;
@@ -31,20 +45,9 @@ t_trad *basic(t_trad **trad, char **tab)
     { return ((void*)0); }
     tmp = (*tmp).next; }
   tmp = tralloc();
-  int secds;
-  int cents;
   (*tmp).origine = tab[0];
   *((*tmp).traduit) = tab[1];
-  if (LEN(tab[2]) != 5)                                   //Temps mal formatté
-  { (*tmp).chrono = 0;
-    return (tmp); }
-  secds = atoi(tab[2]);
-  cents = atoi(tab[2] + 3);
-  if (secds < 0 || secds > 99 || cents < 0 || cents > 99) //Temps mal formatté
-  { (*tmp).chrono = 0;
-    return (tmp); }
-  (*tmp).chrono = ((time_t)secds << 8) + (time_t)cents;
-  return (tmp); }
+  return (get_time(tmp, tab[2], 0)); }
 
 t_trad *gettrad(t_trad *tmp, char **tab)
 { int i;
@@ -56,7 +59,8 @@ t_trad *gettrad(t_trad *tmp, char **tab)
         break; }
       i += 1; }
     if (!((*tmp).traduit)[i] && i < 5)
-    { ((*tmp).traduit)[i] = tab[1]; }
+    { ((*tmp).traduit)[i] = tab[1];
+      tmp = get_time(tmp, tab[2], i); }
     else if (i == 5)
     { (*tmp).flag |= TropDeSynonymes; }}
   return (tmp); }
@@ -97,9 +101,10 @@ int main(int argc, char **argv)
   { printf("HI::{%s, ", (*tmp).origine);
     i = 0;
     while (((*tmp).traduit)[i] && i < 5)
-    { printf("%s, ", ((*tmp).traduit)[i]);
+    { printf("%s ", ((*tmp).traduit)[i]);
+      printf("(%lu, %lu), ", ((*tmp).chrono)[i] >> 8, ((*tmp).chrono)[i] & 0xFF);
       i += 1; }
-    printf("(%lu, %lu)}\n", (*tmp).chrono >> 8, (*tmp).chrono & 0xFF);
+    printf("}\n");
     tmp = (*tmp).next; }
   return (0);
 

@@ -13,7 +13,7 @@
   typedef struct s_ubersetzen
   { char *origine;
     char *traduit[5]; //Le tableau de 5 pour les synonymes
-    time_t chrono;
+    time_t chrono[5]; //Un chrono par synonyme
     char flag;
     struct s_ubersetzen *next;
   } t_trad;
